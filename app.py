@@ -1,11 +1,16 @@
 from flask import Flask,render_template, request, redirect, url_for, session
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.engine import url
+from flask_mysqldb import MySQL
 
 app = Flask(__name__)
-db = SQLAlchemy(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-app.config['SECRET_KEY'] = 'HIRE_ME'
+
+#Cofigure database
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'root@1234'
+app.config['MYSQL_DB'] = 'flasktest'
+
+db = MySQL(app)
+
 
 #session stores data as a dictionary
 
@@ -21,8 +26,14 @@ def student_signup():
 @app.route('/student_login', methods = ["POST","GET"])
 def student_login():
     if request.method == "POST":
-        session['std_name'] = request.form['student_name']
-        session['std_pass'] = request.form['student_pass']
+        # session.pop(std_name, None)
+        # session.pop(std_pass, None)
+        std_name = request.form['student_name']
+        std_pass = request.form['student_pass']
+        cur = db.connection.cursor()
+        cur.execute("INSERT INTO students(name, email, password, rollno) VALUES (%s,%s,%s,%s)",(std_name,'test@test.com',std_pass, '123456'))
+        db.connection.commit()
+        cur.close()
         return redirect(url_for("student_page"))
     else:
         return render_template('student/login.html')
@@ -30,11 +41,11 @@ def student_login():
 
 @app.route("/std")
 def student_page():
-    if 'std_name' in session:
-        name = session['std_name']
-        return f'Hello {name}'
-    else:    
-        return redirect(url_for("student_login"))
+    # if 'std_name' in session:
+    #     name = session['std_name']
+        return f'Hello {std_name}'
+    # else:    
+    #     return redirect(url_for("student_login"))
 
 
 if __name__ == '__main__':
