@@ -1,17 +1,17 @@
 from enum import unique
 from flask import Flask,render_template, session,request, redirect, url_for, flash
-from flask_session import Session
+# from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_manager, login_user, LoginManager, login_required, logout_user, current_user
 from models import *
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hireMe'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.sqlite3'
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_TYPE"] = "filesystem"
-Session(app)
+# app.config["SESSION_PERMANENT"] = False
+# app.config["SESSION_TYPE"] = "filesystem"
+# Session(app)
 
 db  = SQLAlchemy(app)
 
@@ -21,15 +21,14 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
 
-@app.before_first_request
-def create_tables():
-    db.create_all()
+
 
 @login_manager.user_loader
 def load_user(user_id):
   if session['account_type'] == 'Interviewer':
       return Interviewer.query.get(int(user_id))
   elif session['account_type'] == 'Student':
+      print("Inside student loign session")
       return Student.query.get(int(user_id))
   else:
       return None
@@ -54,10 +53,10 @@ def student_signup():
         email = request.form['email']
         rollno = request.form['rollNo']
         password = request.form['password']
-        student = Student(username = username, email = email , rollno = rollno, password = password)
-        db.session.add(student)
+        new_student = Student(username = username, email = email , rollno = rollno, password = password)
+        db.session.add(new_student)
         db.session.commit()
-        print(student.username + " " + student.email)
+        print(new_student.username + " " + new_student.email)
         return redirect(url_for("student_login"))
     else:    
         return render_template('student/signup.html')    
@@ -68,14 +67,18 @@ def student_login():
         std_name = request.form['student_name']
         std_pass = request.form['student_pass']
         session["account_type"] = 'Student'
-        student = Student.query.filter_by(username=std_name).first()
-        if student:
-            if std_pass == student.password:
-                login_user(student)
+        curr_student = Student.query.filter_by(username=std_name).first()
+        if curr_student:
+            if std_pass == curr_student.password:
+                login_user(curr_student)
+                print(curr_student.username + " "+ curr_student.password)
                 return redirect(url_for("student_page"))
             else:
                 print("Incorrect Password")
                 return redirect(url_for("student_login"))
+        else:
+            print("Not found in database")
+            return redirect(url_for("student_login"))
     else:
         return render_template('student/login.html')
 
@@ -83,7 +86,8 @@ def student_login():
 @app.route('/student_logout', methods = ['GET','POST'])
 @login_required
 def student_logout():
-    session["account_type"] = None
+    # session["account_type"] = None
+    session.pop("account_type",None)
     logout_user()
     print("Student Logged out")
     return redirect(url_for('student_login'))
@@ -94,10 +98,10 @@ def interviewer_signup():
         intvw_name = request.form['interviewer_name']
         intvw_email = request.form['interviewer_email']
         intvw_pass = request.form['interviewer_pass']
-        interviewer = Interviewer(username = intvw_name, email = intvw_email , password = intvw_pass)
-        db.session.add(interviewer)
+        new_interviewer = Interviewer(username = intvw_name, email = intvw_email , password = intvw_pass)
+        db.session.add(new_interviewer)
         db.session.commit()
-        print(interviewer.username + " " + interviewer.email)
+        print(new_interviewer.username + " " + new_interviewer.email)
         return redirect(url_for("interviewer_login"))
     else:    
         return render_template('interviewer/signup.html')
@@ -108,11 +112,11 @@ def interviewer_login():
         intvw_name = request.form['interviewer_name']
         intvw_pass = request.form['interviewer_pass']
         session["account_type"] = 'Interviewer'
-        interviewer = Interviewer.query.filter_by(username=intvw_name).first()
-        if interviewer:
-            if intvw_pass != interviewer.password:
+        curr_interviewer = Interviewer.query.filter_by(username=intvw_name).first()
+        if curr_interviewer:
+            if intvw_pass != curr_interviewer.password:
                 flash("Incorrect password")
-            login_user(interviewer)
+            login_user(curr_interviewer)
         return redirect(url_for("interview_page"))
     else:
         return render_template('interviewer/login.html')
@@ -120,7 +124,8 @@ def interviewer_login():
 @app.route('/interviewer_logout', methods = ['GET','POST'])
 @login_required
 def interviewer_logout():
-    session["account_type"] = None
+    # session["account_type"] = None
+    session.pop("account_type",None)
     logout_user()
     print("Interviewer Logged out")
     return redirect(url_for('interviewer_login'))
@@ -148,6 +153,8 @@ def interview_page():
     #     return redirect(url_for("interviewer_login"))
 
 if __name__ == '__main__':
+    print("Creating tables")
     # db.create_all()
+    print("Tables created")
+    Student.query.all()
     app.run(port=5000,debug=True)
-
