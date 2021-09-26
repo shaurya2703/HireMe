@@ -2,19 +2,23 @@ from enum import unique
 from flask import Flask,render_template, session,request, redirect, url_for, flash
 # from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin, login_manager, login_user, LoginManager, login_required, logout_user, current_user
+from flask_login import login_manager, login_user, LoginManager, login_required, logout_user, current_user
+# from flask_script import Manager
+
 from models import *
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hireMe'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.sqlite3'
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # app.config["SESSION_PERMANENT"] = False
 # app.config["SESSION_TYPE"] = "filesystem"
 # Session(app)
 
 db  = SQLAlchemy(app)
-
+# migrate = Migrate(app,db)
+# manager = Manager(app)
+# manager.add_command('db', MigrateCommand)
 
 #Login manager
 login_manager = LoginManager()
@@ -51,12 +55,13 @@ def student_signup():
     if request.method == 'POST':
         username = request.form['name']
         email = request.form['email']
+        collegeName = request.form['collegeName']
         rollno = request.form['rollNo']
         password = request.form['password']
-        new_student = Student(username = username, email = email , rollno = rollno, password = password)
+        new_student = Student(username = username, email = email ,collegeName=collegeName, rollno = rollno, password = password)
         db.session.add(new_student)
         db.session.commit()
-        print(new_student.username + " " + new_student.email)
+        print(new_student.username + " " + new_student.email + " " + new_student.collegeName)
         return redirect(url_for("student_login"))
     else:    
         return render_template('student/signup.html')    
@@ -97,13 +102,14 @@ def interviewer_signup():
     if request.method == 'POST':
         intvw_name = request.form['interviewer_name']
         intvw_email = request.form['interviewer_email']
+        company_name = request.form['company_name']
         intvw_pass = request.form['interviewer_pass']
-        new_interviewer = Interviewer(username = intvw_name, email = intvw_email , password = intvw_pass)
+        new_interviewer = Interviewer(username = intvw_name, email = intvw_email ,companyName=company_name, password = intvw_pass)
         db.session.add(new_interviewer)
         db.session.commit()
-        print(new_interviewer.username + " " + new_interviewer.email)
+        print(new_interviewer.username + " " + new_interviewer.email + " " + new_interviewer.companyName)
         return redirect(url_for("interviewer_login"))
-    else:    
+    else:
         return render_template('interviewer/signup.html')
 
 @app.route('/interviewer_login', methods = ["POST","GET"])
@@ -155,6 +161,7 @@ def interview_page():
 if __name__ == '__main__':
     print("Creating tables")
     # db.create_all()
+    # manager.run()
     print("Tables created")
     Student.query.all()
     app.run(port=5000,debug=True)
