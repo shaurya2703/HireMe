@@ -5,10 +5,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import login_manager, login_user, LoginManager, login_required, logout_user, current_user
 # from flask_script import Manager
 
-from models import *
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hireMe'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # app.config["SESSION_PERMANENT"] = False
@@ -16,6 +16,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Session(app)
 
 db  = SQLAlchemy(app)
+
+from models import *
 # migrate = Migrate(app,db)
 # manager = Manager(app)
 # manager.add_command('db', MigrateCommand)
@@ -64,7 +66,7 @@ def student_signup():
         print(new_student.username + " " + new_student.email + " " + new_student.collegeName)
         return redirect(url_for("student_login"))
     else:    
-        return render_template('student/signup.html')    
+        return render_template('student/accounts/signup.html')    
 
 @app.route('/student_login', methods = ["POST","GET"])
 def student_login():
@@ -85,7 +87,7 @@ def student_login():
             print("Not found in database")
             return redirect(url_for("student_login"))
     else:
-        return render_template('student/login.html')
+        return render_template('student/accounts/login.html')
 
 
 @app.route('/student_logout', methods = ['GET','POST'])
@@ -95,7 +97,7 @@ def student_logout():
     session.pop("account_type",None)
     logout_user()
     print("Student Logged out")
-    return redirect(url_for('student_login'))
+    return redirect(url_for('index'))
     
 @app.route('/interviewer_signup',methods = ["POST","GET"])
 def interviewer_signup():
@@ -104,13 +106,13 @@ def interviewer_signup():
         intvw_email = request.form['interviewer_email']
         company_name = request.form['company_name']
         intvw_pass = request.form['interviewer_pass']
-        new_interviewer = Interviewer(username = intvw_name, email = intvw_email ,companyName=company_name, password = intvw_pass)
+        new_interviewer = Interviewer(username = intvw_name, email = intvw_email ,company_name=company_name, password = intvw_pass)
         db.session.add(new_interviewer)
         db.session.commit()
-        print(new_interviewer.username + " " + new_interviewer.email + " " + new_interviewer.companyName)
+        print(new_interviewer.username + " " + new_interviewer.email + " " + new_interviewer.company_name)
         return redirect(url_for("interviewer_login"))
     else:
-        return render_template('interviewer/signup.html')
+        return render_template('interviewer/accounts/signup.html')
 
 @app.route('/interviewer_login', methods = ["POST","GET"])
 def interviewer_login():
@@ -125,7 +127,7 @@ def interviewer_login():
             login_user(curr_interviewer)
         return redirect(url_for("interview_page"))
     else:
-        return render_template('interviewer/login.html')
+        return render_template('interviewer/accounts/login.html')
 
 @app.route('/interviewer_logout', methods = ['GET','POST'])
 @login_required
@@ -134,7 +136,7 @@ def interviewer_logout():
     session.pop("account_type",None)
     logout_user()
     print("Interviewer Logged out")
-    return redirect(url_for('interviewer_login'))
+    return redirect(url_for('index'))
 
 @app.route("/std")
 @login_required
@@ -160,8 +162,8 @@ def interview_page():
 
 if __name__ == '__main__':
     print("Creating tables")
-    # db.create_all()
+    db.create_all()
     # manager.run()
     print("Tables created")
-    Student.query.all()
+    # Student.query.all()
     app.run(port=5000,debug=True)
