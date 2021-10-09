@@ -52,6 +52,7 @@ class Job_stu_map(db.Model,UserMixin):
     js_id = db.Column(db.Integer, primary_key=True)
     job_id=db.Column(db.Integer, db.ForeignKey('jobs.job_id'))
     stu_id=db.Column(db.Integer, db.ForeignKey('student.id'))
+    attempted=db.Column(db.Boolean, default=False)
 
 class Student_answers(db.Model,UserMixin):
     __tablename__='student_answers'
