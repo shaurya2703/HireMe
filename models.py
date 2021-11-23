@@ -4,8 +4,8 @@ from flask_login import UserMixin
 class Student(db.Model, UserMixin):
     __tablename__ = 'student'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(120),  nullable=False)
-    email = db.Column(db.String(120), nullable=False)
+    name = db.Column(db.String(120),  nullable=False)
+    email = db.Column(db.String(120), nullable=False ,unique=True)
     password = db.Column(db.String(120),nullable = False)
     rollno = db.Column(db.String(120), nullable =False)
     collegeName= db.Column(db.String(120), nullable =False)
@@ -14,28 +14,29 @@ class Student(db.Model, UserMixin):
     
 
     def __repr__(self):
-        return f"User('{self.username}' , '{self.email}' , '{self.password}' , '{self.rollno}' ,'{self.collegeName}')"
+        return f"User(import '{self.name}' , '{self.email}' , '{self.password}' , '{self.rollno}' ,'{self.collegeName}')"
 
 class Interviewer(db.Model, UserMixin):
     __tablename__ = 'interviewer' 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(120),  nullable=False, unique=True)
+    name = db.Column(db.String(120),  nullable=False, unique=True)
     email = db.Column(db.String(120), nullable=False)
     password = db.Column(db.String(120),nullable = False)
     company_name=db.Column(db.String(120),nullable=False)
     jobs_added=db.relationship('Jobs',backref='interviewer')
 
     def __repr__(self):
-        return f"User('{self.username}' , '{self.email}' , '{self.password}', '{self.company_name}')"
+        return f"User('{self.name}' , '{self.email}' , '{self.password}', '{self.company_name}')"
 
 class Jobs(db.Model,UserMixin):
     __tablename__='jobs'
     job_id=db.Column(db.Integer, primary_key=True)
     job_profile=db.Column(db.String(120),nullable = False)
     job_description_path=db.Column(db.String(120),nullable = False)
+    collegeName=db.Column(db.String(120), nullable =False)
     interviewer_id=db.Column(db.Integer, db.ForeignKey('interviewer.id'))
     questions_added=db.relationship('Questions',backref='jobs')
-    answers=db.relationship('Job_stu_map',backref='jobs')
+    stu_for_job=db.relationship('Job_stu_map',backref='jobs')
 
 class Questions(db.Model,UserMixin):
     __tablename__='questions'
@@ -51,6 +52,7 @@ class Job_stu_map(db.Model,UserMixin):
     js_id = db.Column(db.Integer, primary_key=True)
     job_id=db.Column(db.Integer, db.ForeignKey('jobs.job_id'))
     stu_id=db.Column(db.Integer, db.ForeignKey('student.id'))
+    attempted=db.Column(db.Boolean, default=False)
 
 class Student_answers(db.Model,UserMixin):
     __tablename__='student_answers'
