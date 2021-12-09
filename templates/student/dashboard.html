@@ -214,16 +214,22 @@
 
                       <tr>
                         <th scope="row">
+                          <!-- interviewer name -->
                           {{ job.u }}
                         </th>
                         <td>
+                          <!-- company name -->
                           {{ job.cn }}
                         </td>
                         <td>
+                          <!-- job profile  -->
                           {{ job.jp }}
                         </td>
+                       
                         <td>
-                          <i class="fas fa-arrow-up text-success mr-3"></i> 46,53%
+                          <div class="col-4 text-right">
+                            <a href="{{ url_for('student_interview', job_id = job.jid ) }}" class="btn btn-sm btn-primary">Start</a>
+                          </div>
                         </td>
                       </tr>
 

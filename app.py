@@ -152,10 +152,21 @@ def student_page():
         print(current_user.id)
         student_id = current_user.id
         # intervw_list = Interviewer.query.all()
-        result = db.session.execute(f'select i.name u,i.company_name cn,j.job_profile jp from interviewer i join jobs j on j.interviewer_id = i.id join job_stu_map js on js.job_id=j.job_id where js.stu_id={ student_id }')
+        result = db.session.execute(f'select i.name u,i.company_name cn,j.job_profile jp , j.job_id jid from interviewer i join jobs j on j.interviewer_id = i.id join job_stu_map js on js.job_id=j.job_id where js.stu_id={ student_id }')
         return render_template('student/dashboard.html',name = current_user.name, jobs_list = result)
     # else:    
     #     return redirect(url_for("student_login"))
+
+@app.route("/std/interview")
+@login_required
+def student_interview():
+    print(current_user)
+    print(current_user.id)
+    student_id = current_user.id
+    # intervw_list = Interviewer.query.all()
+    job_id = request.args.get('job_id')
+    print(job_id)
+    return render_template('student/includes/std_interview.html', name = current_user.name, job_id = job_id )
 
 @app.route("/intvw")
 @login_required
