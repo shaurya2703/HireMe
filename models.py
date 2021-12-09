@@ -14,7 +14,7 @@ class Student(db.Model, UserMixin):
     
 
     def __repr__(self):
-        return f"User(import '{self.name}' , '{self.email}' , '{self.password}' , '{self.rollno}' ,'{self.collegeName}')"
+        return (f"User(import '{self.name}' , '{self.email}' , '{self.password}' , '{self.rollno}' ,'{self.collegeName}')")
 
 class Interviewer(db.Model, UserMixin):
     __tablename__ = 'interviewer' 
@@ -26,7 +26,7 @@ class Interviewer(db.Model, UserMixin):
     jobs_added=db.relationship('Jobs',backref='interviewer')
 
     def __repr__(self):
-        return f"User('{self.name}' , '{self.email}' , '{self.password}', '{self.company_name}')"
+        return (f"User('{self.name}' , '{self.email}' , '{self.password}', '{self.company_name}')")
 
 class Jobs(db.Model,UserMixin):
     __tablename__='jobs'

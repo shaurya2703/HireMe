@@ -130,6 +130,7 @@
                     <th scope="col">Job Description</th>
                     <th scope="col">College Name</th>
                     <th scope="col">Number of attempts</th>
+                    <th scope="col">Add Questions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -148,6 +149,11 @@
                     <td>
                       <!-- <i class="fas fa-arrow-up text-success mr-3"></i>  -->
                       {{i[3]}}
+                    </td>
+                    <td>
+                      <div class="col-3 text-right">
+                        <a href="{{ url_for('addquestion', job_id = i[4] ) }}" class="btn btn-sm btn-primary">Add</a>
+                      </div>
                     </td>
                   </tr>
                   {% endfor %}
