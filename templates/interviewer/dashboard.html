@@ -21,8 +21,8 @@
           
         </div>
         <div class="col-lg-6 col-5 text-right">
-          <!-- <a href="#" class="btn btn-sm btn-neutral">New</a>
-          <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
+          <a href="{{ url_for('add_job', interviewer_id = interviewer_id)}}" class="btn btn-sm btn-neutral">Add New Job</a>
+          <!-- <a href="#" class="btn btn-sm btn-neutral">Filters</a> -->
         </div>
       </div>
       <!-- Card stats -->
@@ -130,6 +130,7 @@
                     <th scope="col">Job Description</th>
                     <th scope="col">College Name</th>
                     <th scope="col">Number of attempts</th>
+                    <th scope="col">Add Questions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -148,6 +149,11 @@
                     <td>
                       <!-- <i class="fas fa-arrow-up text-success mr-3"></i>  -->
                       {{i[3]}}
+                    </td>
+                    <td>
+                      <div class="col-3 text-right">
+                        <a href="{{ url_for('addquestion', job_id = i[4] ) }}" class="btn btn-sm btn-primary">Add</a>
+                      </div>
                     </td>
                   </tr>
                   {% endfor %}

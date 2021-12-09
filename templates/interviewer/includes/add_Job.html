@@ -1,0 +1,70 @@
+{% extends 'interviewer/layouts/base-fullscreen.html' %}
+
+{% block title %} Register {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+<style>
+  .hiddenfield{
+    opacity: 0.0;
+  }
+</style>
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+  <!-- Page content -->
+  <div class="container mt--8 pb-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-5 col-md-7">
+        <div class="card bg-secondary shadow border-0">
+          <div class="card-header bg-transparent pb-1">
+
+            <div class="text-muted text-center mt-2 mb-3">            
+              <h1>Add Job</h1>
+            </div>
+            
+          </div>
+          <div class="card-body px-lg-5 py-lg-5">
+            
+            {% if not success %}
+
+              <form role="form" method="post" action="">
+
+                  <div class="col-md-14">
+                    <div class="form-group">
+                      <input type="job_profile" class="form-control" name="job_profile" placeholder="Job Profile">
+                    </div>
+                  </div>
+                  <div class="col-md-14">
+                    <div class="form-group">
+                      <input type="job_description" class="form-control" rows="5" name="job_description" placeholder="Job Description">
+                    </div>
+                  </div>
+                  <div class="col-md-14">
+                    <div class="form-group">
+                      <input type="collegeName" class="form-control" name="collegeName" placeholder="college Name">
+                    </div>
+                  </div>
+
+                <div class="text-center">
+                  
+                  <button type="submit" class="btn btn-primary btn-lg btn-block my-4">
+                    Submit
+                    </button>
+                  
+                </div>
+              </form>
+            {% endif %}
+
+          </div>
+        </div>
+       
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+
+{% block javascripts %}{% endblock javascripts %}

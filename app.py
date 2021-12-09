@@ -1,8 +1,10 @@
 from enum import unique
+import hashlib
 from flask import Flask,render_template, session,request, redirect, url_for, flash
 # from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import login_manager, login_user, LoginManager, login_required, logout_user, current_user
+import hashlib
 # from flask_script import Manager
 
 
@@ -179,7 +181,7 @@ def interview_page():
         result = db.session.execute(f'''
         select j.job_profile jp,j.job_description_path jd ,j.collegeName coll ,
         (SELECT count(*) from job_stu_map js where js.job_id=j.job_id and attempted=1) 
-        attempted from  jobs j where interviewer_id={current_user.id} ; ''')
+        attempted,j.job_id jid from  jobs j where interviewer_id={current_user.id} ; ''')
         table=[]
         for i in result:
             temp=[]
@@ -188,12 +190,85 @@ def interview_page():
                 temp.append(f.read(50)+'...')
             temp.append(i.coll)
             temp.append(i.attempted)
+            temp.append(i.jid)
             table.append(temp)
         print (table)
 
-        return render_template('interviewer/dashboard.html',name = current_user.name, table=table)
+        return render_template('interviewer/dashboard.html',name = current_user.name,interviewer_id=current_user.id, table=table)
     # else:    
     #     return redirect(url_for("interviewer_login"))
+@app.route("/addquestion", methods = ['GET','POST'])
+@login_required
+def addquestion():
+    
+    if request.method=="GET":
+        
+        jobid=request.args.get('job_id')
+        job_profile=Jobs.query.filter_by(job_id=jobid).first().job_profile
+        print(job_profile)
+        return render_template("interviewer/includes/add_question.html",job_id=jobid,job_profile=job_profile)
+    
+    else :
+        # jobid=request.args.get('job_id')
+        question=request.form["question"]
+        answer=request.form["answer"]
+        jobid=request.form["job_id"] 
+        # print(question+answer+jobid)
+        filepath="documents/questions/"+str(hashlib.sha1(bytes(question+str(jobid),'utf-8')).hexdigest())+'.txt'
+        with open(filepath,"w+") as file:
+            file.write(answer)
+        # print(Jobs.query.filter_by(job_id=jobid).first())
+        db.session.add(Questions(question=question,correct_answer_path=filepath
+        ,jobs=Jobs.query.filter_by(job_id=jobid).first()))
+        db.session.commit()
+
+        job_profile=Jobs.query.filter_by(job_id=jobid).first().job_profile
+        print(job_profile)
+        return render_template("interviewer/includes/add_question.html",job_id=jobid,job_profile=job_profile)
+
+# @app.route("/addlastquestion", methods = ['POST'])
+# # @login_required
+# def addlastquestion():
+    
+#     jobid=request.jobid
+#     question=request.form.question
+#     ans=request.answer
+#     filepath=path_of_questions+str(hashlib.sha1(bytes(question+str(job.job_id),'utf-8')).hexdigest())+'.txt'
+#     with open(filepath,"w+") as file:
+#         file.write(ans)
+#     db.session.add(Questions(question=question+'for'+str(job.job_id),correct_answer_path=filepath
+#     ,jobs=job))
+#     # result = db.session.execute(f'select i.name u,i.company_name cn,j.job_profile jp from interviewer i join 
+#     # jobs j on j.interviewer_id = i.id join job_stu_map js on js.job_id=j.job_id where js.stu_id={ student_id }')
+#     return render_template("interviewer/includes/add_question.html",job_id=jobid)
+
+
+
+
+@app.route('/add_job', methods = ['GET','POST'])
+@login_required
+def add_job():
+    if request.method == 'POST':
+        job_profile = request.form['job_profile']
+        job_description = request.form['job_description']
+        collegeName = request.form['collegeName']
+        interviewer_id = request.args.get('interviewer_id')
+        path_of_jobdesc="documents/jobdesc/"
+        filepath=path_of_jobdesc+str(hashlib.sha1(bytes(job_description+str(interviewer_id),'utf-8')).hexdigest())+'.txt' 
+        with open(filepath,"w+") as file:
+            file.write(job_description)
+        db.session.add(Jobs(job_profile=job_profile,job_description_path=filepath,
+        collegeName=collegeName,
+        interviewer=Interviewer.query.filter_by(id=interviewer_id).first()
+        ))
+        db.session.commit()
+        # print(new_job.job_profile + " " + new_job.job_description_path + " " + new_job.collegeName)
+        # return render_template('interviewer/dashboard.html')
+        return redirect(url_for("interview_page"))
+    else:
+        interviewer_id=request.args.get('interviewer_id')
+        # print(interviewer_id)
+        return render_template('interviewer/includes/add_Job.html',interviewer_id=interviewer_id)
 
 if __name__ == '__main__':
     print("Creating tables")
