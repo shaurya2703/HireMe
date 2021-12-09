@@ -1,28 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+  <head>
+   
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <title>
+      <!-- Argon Dashboard Flask - {% block title %} {% endblock %} | Creative-Tim -->
+    </title>
   
-  <title>
-    <!-- Argon Dashboard Flask - {% block title %} {% endblock %} | Creative-Tim -->
-  </title>
+    <!-- Favicon - loaded as static -->
+    <link rel="icon" href="/static/assets/img/brand/favicon.png" type="image/png">
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+    <!-- Icons -->
+    <link rel="stylesheet" href="/static/assets/vendor/nucleo/css/nucleo.css" type="text/css">
+    <link rel="stylesheet" href="/static/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" type="text/css">
+    <!-- Page plugins -->
+    <!-- Argon CSS -->
+    <link rel="stylesheet" href="/static/assets/css/argon.css?v=1.2.0" type="text/css">
+  
+    <!-- Specific CSS goes HERE -->
+    {% block stylesheets %}{% endblock stylesheets %}
 
-  <!-- Favicon - loaded as static -->
-  <link rel="icon" href="/static/assets/img/brand/favicon.png" type="image/png">
-  <!-- Fonts -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
-  <!-- Icons -->
-  <link rel="stylesheet" href="/static/assets/vendor/nucleo/css/nucleo.css" type="text/css">
-  <link rel="stylesheet" href="/static/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" type="text/css">
-  <!-- Page plugins -->
-  <!-- Argon CSS -->
-  <link rel="stylesheet" href="/static/assets/css/argon.css?v=1.2.0" type="text/css">
-
-  <!-- Specific CSS goes HERE -->
-  {% block stylesheets %}{% endblock stylesheets %}
-  <style>
+    <style>
     button {
     margin: 0 3px 10px 0;
     padding-left: 2px;
@@ -54,23 +56,20 @@
     margin: 0 20px 20px 0;
     }
     </style>
-
-</head>
-
-<body class="">
-
-
+  </head>
+  <body>
+  
   <div class="main-content" id="panel">
    
-
-        Hello  {{name}}
-        This is your interview page for {{job_id}} job id
-        Question: {{ques}}
-        Qno = {{q_no}}
-
-  </div>
-
-  <div class="card_body">
+    Hello  {{name}} 
+    <br>
+    This is your interview page for {{job_id}} job id
+    <br>
+    Question: {{ques}}
+    <br>
+    Qno = {{q_no}}
+    
+</div>
 
     <div id="container">
       <video id="gum" playsinline autoplay muted></video>
@@ -81,24 +80,29 @@
         <button id="record" class="btn btn-primary btn-sm" disabled>Record</button>
         <button id="play" class="btn btn-primary btn-sm" disabled>Play</button>
         <button id="download" class="btn btn-primary btn-sm" disabled>Download</button>
+        <button id="next_question" class="btn btn-primary btn-sm">
+        <a href='{{ url_for("student_interview" , job_id = job_id ,q_no = q_no ) }}' style="color: white;">Next Question</a>
+        </button>
+
       </div>
 
-      
+      <div>
+        <h4>Media Stream Constraints options</h4>
+        <p>
+          Echo cancellation: <input type="checkbox" id="echoCancellation" />
+        </p>
+      </div>
 
       <div>
         <span id="errorMsg"></span>
       </div>
     </div>
+  </body>
 
- 
-  </div>
-
-  {% include "student/includes/scripts.html" %}
-
-  <!-- Specific JS goes HERE --> 
   {% block javascripts %}{% endblock javascripts %}
+
   <script>
-    'use strict';
+      'use strict';
 
 /* globals MediaRecorder */
 
@@ -218,9 +222,7 @@ document.querySelector('button#start').addEventListener('click', async () => {
   await init(constraints);
 });
   </script>
-
+  <!-- <script src="script.js"></script> -->
   <script src="/static/assets/js/argon.js?v=1.2.0"></script>
-
-</body>
 
 </html>
