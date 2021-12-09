@@ -1,4 +1,5 @@
 from enum import unique
+import hashlib
 from flask import Flask,render_template, session,request, redirect, url_for, flash
 # from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
@@ -180,9 +181,34 @@ def interview_page():
             table.append(temp)
         print (table)
 
-        return render_template('interviewer/dashboard.html',name = current_user.name, table=table)
+        return render_template('interviewer/dashboard.html',name = current_user.name,interviewer_id=current_user.id, table=table)
     # else:    
     #     return redirect(url_for("interviewer_login"))
+
+@app.route('/add_job', methods = ['GET','POST'])
+@login_required
+def add_job():
+    if request.method == 'POST':
+        job_profile = request.form['job_profile']
+        job_description = request.form['job_description']
+        collegeName = request.form['collegeName']
+        interviewer_id = request.args.get('interviewer_id')
+        path_of_jobdesc="documents/jobdesc/"
+        filepath=path_of_jobdesc+str(hashlib.sha1(bytes(job_description+str(interviewer_id),'utf-8')).hexdigest())+'.txt' 
+        with open(filepath,"w+") as file:
+            file.write(job_description)
+        db.session.add(Jobs(job_profile=job_profile,job_description_path=filepath,
+        collegeName=collegeName,
+        interviewer=Interviewer.query.filter_by(id=interviewer_id).first()
+        ))
+        db.session.commit()
+        # print(new_job.job_profile + " " + new_job.job_description_path + " " + new_job.collegeName)
+        # return render_template('interviewer/dashboard.html')
+        return redirect(url_for("interview_page"))
+    else:
+        interviewer_id=request.args.get('interviewer_id')
+        # print(interviewer_id)
+        return render_template('interviewer/includes/add_Job.html',interviewer_id=interviewer_id)
 
 if __name__ == '__main__':
     print("Creating tables")
