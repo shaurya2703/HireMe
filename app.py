@@ -159,16 +159,24 @@ def student_page():
     # else:    
     #     return redirect(url_for("student_login"))
 
-@app.route("/std/interview")
+@app.route("/std/interview",methods=['GET','POST'])
 @login_required
 def student_interview():
-    print(current_user)
-    print(current_user.id)
-    student_id = current_user.id
-    # intervw_list = Interviewer.query.all()
-    job_id = request.args.get('job_id')
-    print(job_id)
-    return render_template('student/includes/std_interview.html', name = current_user.name, job_id = job_id )
+    if request.method=='GET':
+        print(current_user)
+        print(current_user.id)
+        student_id = current_user.id
+        # intervw_list = Interviewer.query.all()
+        job_id = request.args.get('job_id')
+        q_no = int(request.args.get('q_no'))
+        print(job_id)
+        print((q_no))
+        questions_list = Questions.query.filter_by(job_id=job_id)
+        print(type(questions_list))
+        if q_no>=questions_list.count():
+            return redirect(url_for('student_page'))
+        print(questions_list[q_no].question)
+        return render_template('student/includes/std_interview.html', name = current_user.name, job_id = job_id,ques = questions_list[q_no].question,q_no = q_no+1 )
 
 @app.route("/intvw")
 @login_required
