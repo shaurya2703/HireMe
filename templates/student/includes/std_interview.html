@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <title>
+    <!-- Argon Dashboard Flask - {% block title %} {% endblock %} | Creative-Tim -->
+  </title>
+
+  <!-- Favicon - loaded as static -->
+  <link rel="icon" href="/static/assets/img/brand/favicon.png" type="image/png">
+  <!-- Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+  <!-- Icons -->
+  <link rel="stylesheet" href="/static/assets/vendor/nucleo/css/nucleo.css" type="text/css">
+  <link rel="stylesheet" href="/static/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" type="text/css">
+  <!-- Page plugins -->
+  <!-- Argon CSS -->
+  <link rel="stylesheet" href="/static/assets/css/argon.css?v=1.2.0" type="text/css">
+
+  <!-- Specific CSS goes HERE -->
+  {% block stylesheets %}{% endblock stylesheets %}
+
+</head>
+
+<body class="">
+
+
+  <div class="main-content" id="panel">
+   
+
+        Hello {{name}}
+        This is your interview page for {{job_id}} job id
+
+  </div>
+
+  <div class="card_body">
+    <button id="start-camera">Start Camera</button>
+    <video id="video" width="320" height="240" autoplay></video>  
+    <!-- <div class="card_body">
+         -->
+        <button id="start-record">Start Recording</button>
+        <button id="stop-record">Stop Recording</button>
+        <a id="download-video" download="test.webm">Download Video</a>    
+      <!-- </div> -->
+  </div>
+
+  {% include "student/includes/scripts.html" %}
+
+  <!-- Specific JS goes HERE --> 
+  {% block javascripts %}{% endblock javascripts %}
+
+  <script src="/static/assets/js/argon.js?v=1.2.0"></script>
+
+</body>
+
+</html>
