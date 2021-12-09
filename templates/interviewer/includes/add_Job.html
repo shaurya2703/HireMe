@@ -17,16 +17,10 @@
     <div class="row justify-content-center">
       <div class="col-lg-5 col-md-7">
         <div class="card bg-secondary shadow border-0">
-          <div class="card-header bg-transparent pb-5">
+          <div class="card-header bg-transparent pb-1">
 
             <div class="text-muted text-center mt-2 mb-3">            
-              Add questions for Job :
-              <br />
-              {% if msg %}
-                <span class="text-danger">{{ msg | safe }}</span>
-              {% else %}
-                {{job_profile}}
-              {% endif %}
+              <h1>Add Job</h1>
             </div>
             
           </div>
@@ -38,31 +32,28 @@
 
                   <div class="col-md-14">
                     <div class="form-group">
-                      <input type="question" class="form-control" name="question" placeholder="Question">
+                      <input type="job_profile" class="form-control" name="job_profile" placeholder="Job Profile">
                     </div>
                   </div>
-                  <div class="hiddenfield" opacity=0.0>
-                    <input type ="hidden" name="job_id" value={{job_id}} size =1px>
-
-                  </div>
-
                   <div class="col-md-14">
-                      <textarea class="form-control" name="answer" rows="5" placeholder="Enter the correct answer"></textarea>
+                    <div class="form-group">
+                      <input type="job_description" class="form-control" rows="5" name="job_description" placeholder="Job Description">
+                    </div>
                   </div>
-                  
+                  <div class="col-md-14">
+                    <div class="form-group">
+                      <input type="collegeName" class="form-control" name="collegeName" placeholder="college Name">
+                    </div>
+                  </div>
+
                 <div class="text-center">
                   
                   <button type="submit" class="btn btn-primary btn-lg btn-block my-4">
-                    Save Question
-                  </button>
+                    Submit
+                    </button>
                   
                 </div>
               </form>
-              
-              <a href="/intvw">
-              <button type="button"  class="btn btn-secondary btn-lg btn-block my-4">
-                Exit
-              </button></a>
             {% endif %}
 
           </div>
