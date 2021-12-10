@@ -66,6 +66,7 @@
     This is your interview page for {{job_id}} job id
     <br>
     Question: {{ques}}
+    
     <br>
     Qno = {{q_no}}
     
@@ -79,7 +80,7 @@
         <button id="start" class="btn btn-primary btn-sm">Start camera</button>
         <button id="record" class="btn btn-primary btn-sm" disabled>Record</button>
         <button id="play" class="btn btn-primary btn-sm" disabled>Play</button>
-        <button id="download" class="btn btn-primary btn-sm" disabled>Download</button>
+        <button id="download" class="btn btn-primary btn-sm" disabled>Submit Video</button>
         <button id="next_question" class="btn btn-primary btn-sm">
         <a href='{{ url_for("student_interview" , job_id = job_id ,q_no = q_no ) }}' style="color: white;">Next Question</a>
         </button>
@@ -140,13 +141,37 @@ playButton.addEventListener('click', () => {
 
 downloadButton.addEventListener('click', () => {
   const blob = new Blob(recordedBlobs, {type: 'video/mp4'});
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.style.display = 'none';
-  a.href = url;
-  a.download = 'test.mp4';
-  document.body.appendChild(a);
-  a.click();
+  // const url = window.URL.createObjectURL(blob);
+  // const a = document.createElement('a');
+  // a.style.display = 'none';
+  // a.href = url;
+  // a.download = 'test.mp4';
+  // document.body.appendChild(a);
+  // a.click();
+
+  var form = new FormData();
+  var job_id = String('{{job_id}}')
+  var q_no = String('{{q_no}}')
+  var name = String('{{name}}')
+  var extension= new String('.mp4')
+  var filename=job_id+name+q_no+extension
+  form.append('file', blob, filename);
+  form.append('job_id', '{{job_id}}');
+  form.append('q_no', '{{q_no}}');
+  // form.append('title', searchedObj.title);
+
+  var oReq = new XMLHttpRequest();
+  oReq.open("POST", "/std/video", true);
+  oReq.onload = function(oEvent) {
+    if (oReq.status == 200) {
+      oOutput.innerHTML = "Uploaded!";
+    } else {
+      oOutput.innerHTML = "Error " + oReq.status + " occurred when trying to upload your file.<br \/>";
+    }
+  };
+
+  oReq.send(form);
+
   setTimeout(() => {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
@@ -209,6 +234,7 @@ async function init(constraints) {
 }
 
 document.querySelector('button#start').addEventListener('click', async () => {
+  // alert("{{name}}");
   const hasEchoCancellation = document.querySelector('#echoCancellation').checked;
   const constraints = {
     audio: {

@@ -1,10 +1,12 @@
 from enum import unique
 import hashlib
-from flask import Flask,render_template, session,request, redirect, url_for, flash
+import os
+from flask import Flask,render_template, session,request, redirect, url_for, flash,jsonify
 # from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import login_manager, login_user, LoginManager, login_required, logout_user, current_user
 import hashlib
+from werkzeug.utils import secure_filename
 # from flask_script import Manager
 
 
@@ -18,6 +20,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Session(app)
 
 db  = SQLAlchemy(app)
+
+
+UPLOAD_FOLDER = 'documents/videos'
+ALLOWED_EXTENSIONS = {'mp4'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 from models import *
 # migrate = Migrate(app,db)
@@ -177,6 +184,38 @@ def student_interview():
             return redirect(url_for('student_page'))
         print(questions_list[q_no].question)
         return render_template('student/includes/std_interview.html', name = current_user.name, job_id = job_id,ques = questions_list[q_no].question,q_no = q_no+1 )
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route("/std/video", methods = ['GET','POST'])
+@login_required
+def upload_file():
+    global UPLOAD_FOLDER
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        job_id = request.form['job_id']
+        q_no = request.form['q_no']     
+        print(file.filename)
+        print(job_id)
+        print(q_no)
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(UPLOAD_FOLDER, filename))
+            mydict = {'a':'aa'}
+            return jsonify(mydict)
+    return '<h1>HELLO<\h1>'
 
 @app.route("/intvw")
 @login_required
