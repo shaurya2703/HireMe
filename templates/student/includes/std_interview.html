@@ -80,9 +80,9 @@
         <button id="start" class="btn btn-primary btn-sm">Start camera</button>
         <button id="record" class="btn btn-primary btn-sm" disabled>Record</button>
         <button id="play" class="btn btn-primary btn-sm" disabled>Play</button>
-        <button id="download" class="btn btn-primary btn-sm" disabled>Submit Video</button>
-        <button id="next_question" class="btn btn-primary btn-sm">
-        <a href='{{ url_for("student_interview" , job_id = job_id ,q_no = q_no ) }}' style="color: white;">Next Question</a>
+        <!-- <button id="download" class="btn btn-primary btn-sm" disabled>Submit Video & next question</button> -->
+        <button id="download" class="btn btn-primary btn-sm" disabled>
+        <a href='{{ url_for("student_interview" , job_id = job_id ,q_no = q_no ) }}' style="color: white;">Submit Video & Next Question</a>
         </button>
 
       </div>
