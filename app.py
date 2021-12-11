@@ -181,6 +181,8 @@ def student_interview():
         questions_list = Questions.query.filter_by(job_id=job_id)
         print(type(questions_list))
         if q_no>=questions_list.count():
+            db.session.execute(f'''update job_stu_map set attempted=true where job_id={job_id} and 
+            stu_id={student_id}''')
             return redirect(url_for('student_page'))
         print(questions_list[q_no].question)
         return render_template('student/includes/std_interview.html', name = current_user.name, job_id = job_id,ques = questions_list[q_no].question,q_no = q_no+1 )
@@ -216,6 +218,40 @@ def upload_file():
             mydict = {'a':'aa'}
             return jsonify(mydict)
     return '<h1>HELLO<\h1>'
+
+@app.route("/std/job_openings")
+@login_required
+def job_openings():
+    stu_id=session["id"]
+    #company name ,job profile ,jd
+    result = db.session.execute(f'''select j.job_id jid ,j.job_profile jp,j.job_description_path jd,i.company_name cname
+    from jobs j join interviewer i on j.interviewer_id =i.id 
+    where j.collegeName=(select s.collegeName from student s where s.id={stu_id})''')
+    # join student s on s.collegeName=j.collegeName 
+    # where s.id={stu_id}''')
+    table=[]
+    for i in result:
+        temp=[]
+        temp.append(i.cname)
+        temp.append(i.jp)
+        with open(i.jd,'r') as f:
+            temp.append(f.read(50)+'...')
+        temp.append(i.jid)
+        table.append(temp)
+    return render_template('student/includes/job_openings.html', opening_list = table)
+
+
+@app.route("/std/job_openings/enroll/<jid>")
+@login_required
+def enroll_job(jid):
+    stu_id=session["id"]
+    if not Job_stu_map.query.filter_by(job_id=jid,stu_id=stu_id).first():
+        db.session.add(Job_stu_map(job_id=jid,stu_id=stu_id))
+        db.session.commit()
+    else :
+        print("already exist")
+    return redirect(url_for('job_openings'))
+
 
 @app.route("/intvw")
 @login_required
@@ -273,24 +309,6 @@ def addquestion():
         print(job_profile)
         return render_template("interviewer/includes/add_question.html",job_id=jobid,job_profile=job_profile)
 
-# @app.route("/addlastquestion", methods = ['POST'])
-# # @login_required
-# def addlastquestion():
-    
-#     jobid=request.jobid
-#     question=request.form.question
-#     ans=request.answer
-#     filepath=path_of_questions+str(hashlib.sha1(bytes(question+str(job.job_id),'utf-8')).hexdigest())+'.txt'
-#     with open(filepath,"w+") as file:
-#         file.write(ans)
-#     db.session.add(Questions(question=question+'for'+str(job.job_id),correct_answer_path=filepath
-#     ,jobs=job))
-#     # result = db.session.execute(f'select i.name u,i.company_name cn,j.job_profile jp from interviewer i join 
-#     # jobs j on j.interviewer_id = i.id join job_stu_map js on js.job_id=j.job_id where js.stu_id={ student_id }')
-#     return render_template("interviewer/includes/add_question.html",job_id=jobid)
-
-
-
 
 @app.route('/add_job', methods = ['GET','POST'])
 @login_required
@@ -309,13 +327,20 @@ def add_job():
         interviewer=Interviewer.query.filter_by(id=interviewer_id).first()
         ))
         db.session.commit()
-        # print(new_job.job_profile + " " + new_job.job_description_path + " " + new_job.collegeName)
-        # return render_template('interviewer/dashboard.html')
         return redirect(url_for("interview_page"))
     else:
         interviewer_id=request.args.get('interviewer_id')
         # print(interviewer_id)
         return render_template('interviewer/includes/add_Job.html',interviewer_id=interviewer_id)
+
+
+@app.route('/show_scores', methods = ['GET','POST'])
+@login_required
+def show_scores():
+    interviewer_id=request.args.get('interviewer_id')
+    job_id=request.args.get('job_id')
+    return render_template('interviewer/includes/interview_scores.html',interviewer_id=interviewer_id,job_id=job_id)
+
 
 if __name__ == '__main__':
     print("Creating tables")

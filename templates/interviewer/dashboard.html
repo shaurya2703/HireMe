@@ -138,7 +138,10 @@
                   
                   <tr>
                     <th scope="row">
-                     <a href="/google.com">{{i[0]}}</a> 
+                     <a 
+                      href="{{ url_for('show_scores', interviewer_id = interviewer_id, job_id = i[4] )}}">
+                      {{i[0]}}
+                     </a> 
                     </th>
                     <td>
                       {{i[1]}}

@@ -1,0 +1,95 @@
+{% extends 'student/layouts/base.html' %}
+
+{% block title %} Dashboard {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <!-- Header -->
+    <div class="header bg-primary pb-6">
+      <div class="container-fluid">
+        <div class="header-body">
+          <div class="row align-items-center py-4">
+            <div class="col-lg-6 col-7">
+              
+              </nav>
+            </div>
+            <div class="col-lg-6 col-5 text-right">
+             
+        </div>
+      </div>
+    </div>
+
+  
+      <div class="row">
+        <div class="col-xl-12">
+          <div class="card">
+            <div class="card-header border-0">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h3 class="mb-0">Interviews List</h3>
+                </div>
+                <!-- <div class="col text-right">
+                  <a href="#!" class="btn btn-sm btn-primary">See all</a>
+                </div> -->
+              </div>
+            </div>
+            <div class="table-responsive">
+              <!-- Projects table -->
+              <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">Company Name</th>
+                    <th scope="col">Job Profile</th>
+                    <th scope="col">Job Description</th>
+                    <th scope="col">Enroll</th>
+                    
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for job in opening_list %}
+
+                      <tr>
+                        <th scope="row">
+                          <!-- interviewer name -->
+                          {{ job[0] }}
+                        </th>
+                        <td>
+                          <!-- company name -->
+                          {{ job[1] }}
+                        </td>
+                        <td>
+                          <!-- job profile  -->
+                          {{ job[2] }}
+                        </td>
+                       
+                        <td>
+                          <div class="col-4 text-right">
+                            <a href='/std/job_openings/enroll/{{job[3]}}' class="btn btn-sm btn-primary">enroll</a>
+                          </div>
+                        </td>
+                      </tr>
+
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      
+
+      {% include "student/includes/footer.html" %}
+
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+  <script src="/static/assets/vendor/chart.js/dist/Chart.min.js"></script>
+  <script src="/static/assets/vendor/chart.js/dist/Chart.extension.js"></script>
+
+{% endblock javascripts %}
