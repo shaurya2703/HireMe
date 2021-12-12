@@ -224,11 +224,12 @@ def upload_file():
 def job_openings():
     stu_id=session["id"]
     #company name ,job profile ,jd
-    result = db.session.execute(f'''select j.job_id jid ,j.job_profile jp,j.job_description_path jd,i.company_name cname
-    from jobs j join interviewer i on j.interviewer_id =i.id 
+    result = db.session.execute(f'''select j.job_id jid ,j.job_profile jp,j.job_description_path jd,i.company_name cname 
+    from jobs j join interviewer i on j.interviewer_id =i.id
     where j.collegeName=(select s.collegeName from student s where s.id={stu_id})''')
     # join student s on s.collegeName=j.collegeName 
     # where s.id={stu_id}''')
+
     table=[]
     for i in result:
         temp=[]
@@ -237,7 +238,9 @@ def job_openings():
         with open(i.jd,'r') as f:
             temp.append(f.read(50)+'...')
         temp.append(i.jid)
+        temp.append(1 if Job_stu_map.query.filter_by(job_id=i.jid,stu_id=stu_id).first() else 0)
         table.append(temp)
+        print (temp)
     return render_template('student/includes/job_openings.html', opening_list = table)
 
 
@@ -245,11 +248,8 @@ def job_openings():
 @login_required
 def enroll_job(jid):
     stu_id=session["id"]
-    if not Job_stu_map.query.filter_by(job_id=jid,stu_id=stu_id).first():
-        db.session.add(Job_stu_map(job_id=jid,stu_id=stu_id))
-        db.session.commit()
-    else :
-        print("already exist")
+    db.session.add(Job_stu_map(job_id=jid,stu_id=stu_id))
+    db.session.commit()
     return redirect(url_for('job_openings'))
 
 

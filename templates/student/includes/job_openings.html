@@ -66,9 +66,17 @@
                         </td>
                        
                         <td>
+                          {% if job[4]==0%}
                           <div class="col-4 text-right">
                             <a href='/std/job_openings/enroll/{{job[3]}}' class="btn btn-sm btn-primary">enroll</a>
                           </div>
+                          {% else %}
+                          <div class="col-4 text-right">
+                            Already Enrolled
+                          </div>
+
+                          {% endif %}
+
                         </td>
                       </tr>
 
