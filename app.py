@@ -185,6 +185,7 @@ def student_interview():
             stu_id={student_id}''')
             return redirect(url_for('student_page'))
         print(questions_list[q_no].question)
+        
         return render_template('student/includes/std_interview.html', name = current_user.name, job_id = job_id,ques = questions_list[q_no].question,q_no = q_no+1 )
 
 
