@@ -23,4 +23,6 @@ numpy
 pandas
 scipy
 opencv-python==4.5.3.56
-tensorflow==2.6.0
+tensorflow
+SpeechRecognition
+moviepy

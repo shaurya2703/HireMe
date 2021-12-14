@@ -1,12 +1,14 @@
 from enum import unique
 import hashlib
 import os
+from cv2 import perspectiveTransform
 from flask import Flask,render_template, session,request, redirect, url_for, flash,jsonify
 # from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import login_manager, login_user, LoginManager, login_required, logout_user, current_user
 import hashlib
 from werkzeug.utils import secure_filename
+from ml_video_emotion import videoEmotion
 # from flask_script import Manager
 
 
@@ -14,13 +16,17 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hireMe'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
+app.config['SQLALCHEMY_POOL_RECYCLE'] = 280
 # app.config["SESSION_PERMANENT"] = False
 # app.config["SESSION_TYPE"] = "filesystem"
 # Session(app)
 
 db  = SQLAlchemy(app)
-
+# SQLALCHEMY_ENGINE_OPTIONS = {
+#     'connect_args': {
+#         'connect_timeout': 30000
+#     }
+# }
 
 UPLOAD_FOLDER = 'documents/videos'
 ALLOWED_EXTENSIONS = {'mp4'}
@@ -185,8 +191,13 @@ def student_interview():
             stu_id={student_id}''')
             return redirect(url_for('student_page'))
         print(questions_list[q_no].question)
-        
-        return render_template('student/includes/std_interview.html', name = current_user.name, job_id = job_id,ques = questions_list[q_no].question,q_no = q_no+1 )
+        question= questions_list[q_no].question
+        q_id=questions_list[q_no].question_id
+        for _ in questions_list:
+            pass
+        return render_template('student/includes/std_interview.html', name = current_user.name, 
+        job_id = job_id,ques =question,q_no = q_no+1,
+        q_id=  q_id)
 
 
 def allowed_file(filename):
@@ -204,10 +215,12 @@ def upload_file():
             return redirect(request.url)
         file = request.files['file']
         job_id = request.form['job_id']
-        q_no = request.form['q_no']     
+        q_no = request.form['q_no']    
+        q_id = request.form['q_id']     
         print(file.filename)
         print(job_id)
         print(q_no)
+        print(q_id)
         # if user does not select file, browser also
         # submit an empty part without filename
         if file.filename == '':
@@ -216,9 +229,25 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(UPLOAD_FOLDER, filename))
-            mydict = {'a':'aa'}
-            return jsonify(mydict)
+            print("Starting to add video in db")
+            # student_answer = Student_answers(questions=Questions.query.filter_by(question_id=q_id).first(),
+            # student=Student.query.filter_by(id=current_user.id).first(),answer_path=UPLOAD_FOLDER+'/'+filename)
+            full_path="'"+UPLOAD_FOLDER+'/'+filename+"'"
+            print(full_path)
+            query=f'insert into Student_answers(question_id,stu_id,answer_path) values ({q_id},{current_user.id},{full_path})'
+            # db.session.add(student_answer)
+            # add_ans(query)
+            predictions = videoEmotion(full_path)
+            print(predictions)
+            print("Ans id ")
+            print('commited')    
+        mydict = {'a':'aa'}
+        return jsonify(mydict)
     return '<h1>HELLO<\h1>'
+def add_ans(query):
+    
+    db.session.execute(query)
+    # db.session.commit()
 
 @app.route("/std/job_openings")
 @login_required
@@ -345,6 +374,7 @@ def show_scores():
 
 if __name__ == '__main__':
     print("Creating tables")
+    
     db.create_all()
     # manager.run()
     print("Tables created")
