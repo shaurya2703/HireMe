@@ -10,7 +10,7 @@ class Student(db.Model, UserMixin):
     rollno = db.Column(db.String(120), nullable =False)
     collegeName= db.Column(db.String(120), nullable =False)
     jobs_enrolled=db.relationship('Job_stu_map',backref='student')
-    answers=db.relationship('Student_answers',backref='student')
+    # answers=db.relationship('Student_answers',backref='student')
     
 
     def __repr__(self):
@@ -44,7 +44,7 @@ class Questions(db.Model,UserMixin):
     question = db.Column(db.String(120),  nullable=False)
     correct_answer_path = db.Column(db.String(120), nullable=False)
     job_id=db.Column(db.Integer, db.ForeignKey('jobs.job_id'))
-    student_answers=db.relationship('Student_answers',backref='questions')
+    # student_answers=db.relationship('Student_answers',backref='questions')
     
 
 class Job_stu_map(db.Model,UserMixin):
@@ -57,8 +57,8 @@ class Job_stu_map(db.Model,UserMixin):
 class Student_answers(db.Model,UserMixin):
     __tablename__='student_answers'
     answer_id = db.Column(db.Integer, primary_key=True)
-    question_id=db.Column(db.Integer, db.ForeignKey('questions.question_id'))
-    stu_id=db.Column(db.Integer, db.ForeignKey('student.id'))
+    question_id=db.Column(db.Integer, nullable=False)
+    stu_id=db.Column(db.Integer, nullable=False)
     answer_path=db.Column(db.String(120), nullable=False)
 
 '''def Student_scores(db.Model,UserMixin):

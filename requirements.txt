@@ -19,3 +19,11 @@ typing-extensions==3.10.0.2
 Werkzeug==2.0.1
 zipp==3.5.0
 nltk
+numpy
+pandas
+scipy
+opencv-python==4.5.3.56
+tensorflow
+SpeechRecognition
+moviepy
+ffmpeg
