@@ -23,7 +23,7 @@ from imutils import face_utils
 from tensorflow.keras.models import load_model
 from tensorflow.keras import backend as K
 
-def gen(path):
+def find_emotions(path):
     """
     Video streaming generator function.
     """
@@ -118,9 +118,12 @@ def gen(path):
             
            
         cv2.imwrite('tmp/t.jpg', frame)
+        cv2.imshow('Frame',frame)
+
         
         i=0
-        while i<10 and ret:   
+        print(i)
+        while i<2 and ret:   
             ret, frame = video_capture.read()
             i+=1
         

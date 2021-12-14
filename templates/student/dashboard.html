@@ -70,8 +70,12 @@
                         </td>
                        
                         <td>
+                          {% if job.att==0 %}
                           <div class="col-4 text-right">
                             <a href='{{ url_for("student_interview" , job_id = job.jid ,q_no = "0" ) }}' class="btn btn-sm btn-primary">Start</a>
+                          {% else %}
+                          Already Attempted
+                          {% endif %}
                           </div>
                         </td>
                       </tr>
