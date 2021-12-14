@@ -30,7 +30,7 @@ from library.text_similarity import *
 
 import speech_recognition as sr
 import moviepy.editor as mp
-import ffmpeg
+# import ffmpeg
 
 def videoToText(path):
 
@@ -47,6 +47,8 @@ def videoToText(path):
     with audio as source:
         audio_file = r.record(source)
     result = r.recognize_google(audio_file)
+    os.remove('audio.mp3')
+    os.remove('audio.wav')
     return result
 
 
