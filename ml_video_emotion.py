@@ -9,7 +9,7 @@ import os
 import requests
 import argparse
 from collections import OrderedDict
-import ffmpeg
+# import ffmpeg
 
 ### Image processing ###
 import cv2
@@ -30,6 +30,7 @@ from library.text_similarity import *
 
 import speech_recognition as sr
 import moviepy.editor as mp
+
 # import ffmpeg
 
 def videoToText(path):
@@ -150,7 +151,7 @@ def videoEmotion(path):
         cv2.imshow('Frame', frame)
 
         i = 0
-        print(i)
+        # print(i)
         while i < 8 and ret:
             ret, frame = video_capture.read()
             i += 1
@@ -199,4 +200,4 @@ def videoEmotion(path):
     
     video_capture.release()
     cv2.destroyAllWindows()
-    return final_ans
+    return final_ans,True

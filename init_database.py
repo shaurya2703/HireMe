@@ -35,7 +35,7 @@ db.session.commit()
 for stu in Student.query.all():
     for job in Jobs.query.filter_by(collegeName=stu.collegeName):
         db.session.add(Job_stu_map(jobs=job,student=stu))
-    db.session.execute('update job_stu_map set attempted=true where stu_id =1 or job_id=1;')
+    db.session.execute('update job_stu_map set attempted=false where stu_id =1 or job_id=1;')
 db.session.commit()
 
 '''populating questions table'''

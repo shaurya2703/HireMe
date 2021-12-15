@@ -82,8 +82,11 @@
         <button id="play" class="btn btn-primary btn-sm" disabled>Play</button>
         <!-- <button id="download" class="btn btn-primary btn-sm" disabled>Submit Video & next question</button> -->
         <button id="download" class="btn btn-primary btn-sm" disabled>
-        <a href='{{ url_for("student_interview" , job_id = job_id ,q_no = q_no ) }}' style="color: white;">Submit Video & Next Question</a>
+          Submit Video </a>
         </button>
+        <a href=' {{ url_for("student_interview",job_id=job_id ,q_no=q_no) }} ' style="color: white;">
+          <button id="next" class="btn btn-primary btn-sm" disabled>Next Question</button>
+        </a>
 
       </div>
 
@@ -115,6 +118,7 @@ const recordedVideo = document.querySelector('video#recorded');
 const recordButton = document.querySelector('button#record');
 const playButton = document.querySelector('button#play');
 const downloadButton = document.querySelector('button#download');
+const nextbtn = document.querySelector('button#next');
 
 
 recordButton.addEventListener('click', () => {
@@ -172,6 +176,11 @@ downloadButton.addEventListener('click', () => {
   };
 
   oReq.send(form);
+  // alert(oReq.response)
+  nextbtn.disabled = false;
+
+
+  // document.getElementById("nextbtn").click();
 
   setTimeout(() => {
     document.body.removeChild(a);
