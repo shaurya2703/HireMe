@@ -421,7 +421,5 @@ if __name__ == '__main__':
     db.create_all()
     # manager.run()
     print("Tables created")
-    db.session.execute('update job_stu_map set attempted=false')
-    db.session.commit()
     # Student.query.all()
     app.run(port=5000, debug=True)
