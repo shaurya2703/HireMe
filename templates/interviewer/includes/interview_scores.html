@@ -1,6 +1,70 @@
-<h1>
+{% extends 'interviewer/layouts/base.html' %}
 
-    {{ interviewer_id }}
-    {{ job_id }}
+{% block title %} Dashboard {% endblock title %}
 
-</h1>
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<div class="header bg-primary pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+        <div class="col-lg-6 col-7">
+          
+        </div>
+       
+      </div>
+    </div>
+  </div>
+</div>
+
+   
+  <div class="table-responsive">
+    <!-- Projects table -->
+    <table class="table align-items-center table-flush">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Rank</th>
+          <th scope="col">Name</th>
+          <th scope="col">Score</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in table %}
+        
+        <tr>
+          <th scope="row">
+            
+            {{table[i]['Rank']}}
+            
+          </th>
+          <td>
+            {{table[i]['name']}}
+          </td>
+          <td>
+            {{table[i]['Topsis Score']}}
+          </td>
+        </tr>
+        {% endfor %}
+        
+      </tbody>
+    </table>
+  </div>
+
+            
+
+      {% include "interviewer/includes/footer.html" %}
+
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+  <script src="/static/assets/vendor/chart.js/dist/Chart.min.js"></script>
+  <script src="/static/assets/vendor/chart.js/dist/Chart.extension.js"></script>
+
+{% endblock javascripts %}
