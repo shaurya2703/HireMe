@@ -1,0 +1,3 @@
+name,avg(sa.anger_score),avg(sa.disgust_score),avg(sa.fear_score) ,avg(sa.happy_score),avg(sa.sad_score),avg(sa.surprise_score),avg(sa.neutral_score),avg(sa.similarity_score),Topsis Score,Rank
+Satvik Mehra,0.0,0.0,0.0,0.0,0.0,0.0,1.0,0.1516666666666666,,1
+Shaurya Khanna,0.0208333333333333,0.0,0.0,0.0,0.1083333333333333,0.0,0.8708333333333332,0.38,,2

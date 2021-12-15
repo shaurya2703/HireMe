@@ -11,6 +11,10 @@ from flask_login import login_manager, login_user, LoginManager, login_required,
 import hashlib
 from werkzeug.utils import secure_filename
 from ml_video_emotion import videoEmotion,videoToText
+from topsis import topsis
+import csv
+import pandas as pd
+
 
 # from flask_script import Manager
 
@@ -394,11 +398,10 @@ def add_job():
                 str(interviewer_id), 'utf-8')).hexdigest())+'.txt'
         with open(filepath, "w+") as file:
             file.write(job_description)
-        db.session.add(Jobs(job_profile=job_profile, job_description_path=filepath,
-                            collegeName=collegeName,
-                            interviewer=Interviewer.query.filter_by(
-                                id=interviewer_id).first()
-                            ))
+            query=str(f'''insert into jobs(job_profile,job_description_path,collegeName,interviewer_id) 
+            values('{job_profile}','{filepath}','{collegeName}',{interviewer_id})
+            ''')
+            db.session.execute(query)
         db.session.commit()
         return redirect(url_for("interview_page"))
     else:
@@ -410,9 +413,29 @@ def add_job():
 @app.route('/show_scores', methods=['GET', 'POST'])
 @login_required
 def show_scores():
-    interviewer_id = request.args.get('interviewer_id')
-    job_id = request.args.get('job_id')
-    return render_template('interviewer/includes/interview_scores.html', interviewer_id=interviewer_id, job_id=job_id)
+    if request.method=='GET':
+        interviewer_id = request.args.get('interviewer_id')
+        job_id = request.args.get('job_id')
+        query=str(f'''select s.name,avg(sa.anger_score),avg(sa.disgust_score),avg(sa.fear_score) ,avg(sa.happy_score),avg(sa.sad_score),avg(sa.surprise_score),avg(sa.neutral_score),avg(sa.similarity_score) 
+        from student_answers sa join questions q on q.question_id=sa.question_id  join student s on s.id=sa.stu_id where q.job_id= {job_id} group by stu_id
+        ''')
+        result=db.session.execute(query)
+        
+        with open('topsis_input.csv','w') as file:
+            file.write('name,avg(sa.anger_score),avg(sa.disgust_score),avg(sa.fear_score) ,avg(sa.happy_score),avg(sa.sad_score),avg(sa.surprise_score),avg(sa.neutral_score),avg(sa.similarity_score)\n')
+            for row in result:
+                for i in row:
+                    # file.write('1')
+                    file.write(str(0.0000000001 if i==0.0 else i))
+                    file.write(',')
+                file.write('\n')
+        df=topsis('topsis_input.csv','1,1,1,1,1,1,1,3','+,+,+,+,+,+,+,+','topsis_output.csv')
+        out_df = df.to_dict(orient='index')
+        print(out_df.items())
+        for i in out_df:
+            print(i)
+        out_df = dict(sorted(out_df.items(),key=lambda x:x[1]['Rank'],reverse = False))
+        return render_template('interviewer/includes/interview_scores.html', table =out_df)
 
 
 if __name__ == '__main__':
