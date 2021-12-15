@@ -260,7 +260,10 @@ def upload_file():
                 correct_answer = file.read()
             print("Printing correct answers")    
             print(str(correct_answer))
-            similarity_score = similarity(str(correct_answer),text)
+
+            similarity_score= similarity(str(correct_answer),text)
+            print(similarity_score)
+            print(type(similarity_score))
 
             print(full_path)
             query = f''' insert into student_answers
@@ -367,9 +370,9 @@ def addquestion():
             str(hashlib.sha1(bytes(question+str(jobid), 'utf-8')).hexdigest())+'.txt'
         with open(filepath, "w+") as file:
             file.write(answer)
-        # print(Jobs.query.filter_by(job_id=jobid).first())
-        db.session.add(Questions(question=question, correct_answer_path=filepath,
-                       jobs=Jobs.query.filter_by(job_id=jobid).first()))
+        query=str(f'''insert into questions(question,correct_answer_path,job_id) 
+        values('{question}','{filepath}','{jobid}')''')
+        db.session.execute(query)
         db.session.commit()
 
         job_profile = Jobs.query.filter_by(job_id=jobid).first().job_profile
