@@ -1,3 +1,4 @@
+from library.text_similarity import similarity
 from models import *
 from enum import unique
 import hashlib
@@ -10,6 +11,7 @@ from flask_login import login_manager, login_user, LoginManager, login_required,
 import hashlib
 from werkzeug.utils import secure_filename
 from ml_video_emotion import videoEmotion,videoToText
+
 # from flask_script import Manager
 
 
@@ -217,6 +219,7 @@ def allowed_file(filename):
 @login_required
 def upload_file():
     global UPLOAD_FOLDER
+    predictions=dict()
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -240,25 +243,46 @@ def upload_file():
             file.save(os.path.join(UPLOAD_FOLDER, filename))
             print("Starting to add video in db")
             full_path = "'"+UPLOAD_FOLDER+'/'+filename+"'"
+            
+            print(full_path[1:-1])
+            cont=False
+            
+            predictions,cont = videoEmotion(full_path[1:-1])
+            while not cont:
+                print('inside while')
+            print(predictions)
+            print('video to text')
+            text=videoToText(full_path[1:-1])
+            #Correct answer
+            print(text)
+            correct_answer_path = Questions.query.filter_by(question_id = q_id).first().correct_answer_path
+            with open(correct_answer_path,"r+" ) as file:
+                correct_answer = file.read()
+            print("Printing correct answers")    
+            print(str(correct_answer))
+
+            similarity_score= similarity(str(correct_answer),text)
+            print(similarity_score)
+            print(type(similarity_score))
+
             print(full_path)
-            query = f'insert into student_answers(question_id,stu_id,answer_path) values ({q_id},{current_user.id},{full_path})'
-            # db.session.add(student_answer)
+            query = f''' insert into student_answers
+            (question_id,stu_id,answer_path,anger_score,disgust_score,fear_score,happy_score,sad_score,surprise_score,neutral_score,similarity_score) 
+            values ({q_id},{current_user.id},{full_path},{predictions[0]},{predictions[1]},{predictions[2]},{predictions[3]},{predictions[4]},{predictions[5]},{predictions[6]},{similarity_score}) '''
+    #         
             print(query)
             db.session.execute(query)
             db.session.commit()
             db.session.execute(f'''update job_stu_map set attempted=true where job_id={job_id} and 
             stu_id={current_user.id}''')
             db.session.commit()
-            print(full_path[1:-1])
-            predictions = videoEmotion(full_path[1:-1])
-            print(predictions)
-            text=videoToText(full_path[1:-1])
+
             print(text)
             print('commited')
             
-        mydict = {'a': 'aa'}
-        return jsonify(mydict)
-    return '<h1>HELLO<\h1>'
+       
+        
+    return url_for("student_interview" , job_id = job_id ,q_no = q_no ) 
 
 
 @app.route("/std/job_openings")
@@ -346,9 +370,9 @@ def addquestion():
             str(hashlib.sha1(bytes(question+str(jobid), 'utf-8')).hexdigest())+'.txt'
         with open(filepath, "w+") as file:
             file.write(answer)
-        # print(Jobs.query.filter_by(job_id=jobid).first())
-        db.session.add(Questions(question=question, correct_answer_path=filepath,
-                       jobs=Jobs.query.filter_by(job_id=jobid).first()))
+        query=str(f'''insert into questions(question,correct_answer_path,job_id) 
+        values('{question}','{filepath}','{jobid}')''')
+        db.session.execute(query)
         db.session.commit()
 
         job_profile = Jobs.query.filter_by(job_id=jobid).first().job_profile

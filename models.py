@@ -1,3 +1,4 @@
+from flask.sessions import NullSession
 from app import db
 from flask_login import UserMixin
 
@@ -60,6 +61,15 @@ class Student_answers(db.Model,UserMixin):
     question_id=db.Column(db.Integer, nullable=False)
     stu_id=db.Column(db.Integer, nullable=False)
     answer_path=db.Column(db.String(120), nullable=False)
+    anger_score = db.Column(db.Float,nullable = False)
+    disgust_score  = db.Column(db.Float,nullable = False)
+    fear_score = db.Column(db.Float,nullable = False)
+    happy_score = db.Column(db.Float,nullable = False)
+    sad_score = db.Column(db.Float,nullable = False)
+    surprise_score = db.Column(db.Float,nullable = False)
+    neutral_score = db.Column(db.Float,nullable = False)
+    similarity_score = db.Column(db.Float,nullable = False)
+
 
 '''def Student_scores(db.Model,UserMixin):
     __tablename__='student_scored'

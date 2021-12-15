@@ -17,7 +17,7 @@ def similarity(str1,str2):
     temp1 = []
     temp2 = []
     simi = []
-    final = []
+    final = [0,]
     same_sent1 = []
     same_sent2 = []
     #ps = PorterStemmer()
@@ -91,4 +91,5 @@ def similarity(str1,str2):
         print("Somewhat Similar")
     else:
         print("Not Similar")
-    return similarity_index
+        print(type(similarity_index))
+    return 0 if numpy.isnan(similarity_index) else similarity_index
