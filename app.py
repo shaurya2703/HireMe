@@ -322,6 +322,16 @@ def enroll_job(jid):
     db.session.add(Job_stu_map(job_id=jid, stu_id=stu_id))
     db.session.commit()
     return redirect(url_for('job_openings'))
+@app.route('/job_info_stu', methods=['GET'])
+@login_required
+def show_description_stu():
+    job_id = request.args.get('job_id')
+    query=str(f'''Select * from jobs where job_id={job_id};''')
+    result=db.session.execute(query)
+    for i in result:
+        with open(i.job_description_path,'r') as file:
+            desc=file.read()
+        return render_template('student/includes/description.html', desc=desc,job_profile=i.job_profile)
 
 
 @app.route("/intvw")
