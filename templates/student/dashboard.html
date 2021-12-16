@@ -64,10 +64,15 @@
                           <!-- company name -->
                           {{ job.cn }}
                         </td>
+                       
                         <td>
                           <!-- job profile  -->
-                          {{ job.jp }}
+                          <a href='{{ url_for("show_description_stu",job_id = job.jid ) }}'> 
+                            
+                          {{ job.jp }} 
+                        </a>
                         </td>
+                       
                        
                         <td>
                           {% if job.att==0 %}

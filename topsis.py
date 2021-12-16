@@ -101,7 +101,7 @@ def topsis(filename,weights,impacts,outputFile):
     performance_score=dict()
 
     for i in range(r):
-        performance_score[i+1]=dist_neg[i]/(dist_neg[i]+dist_pos[i])
+        performance_score[i+1]=dist_neg[i]/(1 if dist_neg[i]+dist_pos[i]==0 else dist_neg[i]+dist_pos[i])
 
     b=sorted(performance_score.items(), key=lambda x: x[1],reverse=True)
     for i in range(r):

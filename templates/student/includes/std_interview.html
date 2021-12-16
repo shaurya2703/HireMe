@@ -1,264 +1,273 @@
 <!DOCTYPE html>
 <html>
-  <head>
-   
 
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
-    <title>
-      <!-- Argon Dashboard Flask - {% block title %} {% endblock %} | Creative-Tim -->
-    </title>
-  
-    <!-- Favicon - loaded as static -->
-    <link rel="icon" href="/static/assets/img/brand/favicon.png" type="image/png">
-    <!-- Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
-    <!-- Icons -->
-    <link rel="stylesheet" href="/static/assets/vendor/nucleo/css/nucleo.css" type="text/css">
-    <link rel="stylesheet" href="/static/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" type="text/css">
-    <!-- Page plugins -->
-    <!-- Argon CSS -->
-    <link rel="stylesheet" href="/static/assets/css/argon.css?v=1.2.0" type="text/css">
-  
-    <!-- Specific CSS goes HERE -->
-    {% block stylesheets %}{% endblock stylesheets %}
+<head>
 
-    <style>
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+  </title>
+
+  <!-- Favicon - loaded as static -->
+  <link rel="icon" href="/static/assets/img/brand/favicon.png" type="image/png">
+  <!-- Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+  <!-- Icons -->
+  <link rel="stylesheet" href="/static/assets/vendor/nucleo/css/nucleo.css" type="text/css">
+  <link rel="stylesheet" href="/static/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" type="text/css">
+  <!-- Page plugins -->
+  <!-- Argon CSS -->
+  <link rel="stylesheet" href="/static/assets/css/argon.css?v=1.2.0" type="text/css">
+
+  <!-- Specific CSS goes HERE -->
+  {% block stylesheets %}{% endblock stylesheets %}
+
+  <style>
     button {
-    margin: 0 3px 10px 0;
-    padding-left: 2px;
-    padding-right: 2px;
-    width: 99px;
+      margin: 0 3px 10px 0;
+      padding-left: 2px;
+      padding-right: 2px;
+      width: 99px;
     }
 
     button:last-of-type {
-    margin: 0;
+      margin: 0;
     }
 
     p.borderBelow {
-    margin: 0 0 20px 0;
-    padding: 0 0 20px 0;
+      margin: 0 0 20px 0;
+      padding: 0 0 20px 0;
     }
 
     video {
-    vertical-align: top;
-    --width: 25vw;
-    width: var(--width);
-    height: calc(var(--width) * 0.5625);
+      vertical-align: top;
+      --width: 25vw;
+      width: var(--width);
+      height: calc(var(--width) * 0.5625);
     }
 
     video:last-of-type {
-    margin: 0 0 20px 0;
+      margin: 0 0 20px 0;
     }
 
     video#gumVideo {
-    margin: 0 20px 20px 0;
+      margin: 0 20px 20px 0;
     }
-    </style>
-  </head>
-  <body>
+  </style>
+</head>
+
+<body>
+  <!-- style="background-color: #5E72E4;" -->
+
+  <section class="section" style="background-color: #5E72E4;">
+    <div class="container h-200">
+    <div class="card card-profile  shadow mt--350">
+    <div class="px-4">
   
-  <div class="main-content" id="panel">
-   
-    Hello  {{name}} 
-    <br>
-    This is your interview page for {{job_id}} job id
-    <br>
-    Question: {{ques}}
-    
-    <br>
-    Qno = {{q_no}}
-    
-</div>
+    <div class="d-flex justify-content-md-center align-items-center vh-100">
+      <div id="container">
+        <video id="gum" playsinline autoplay muted></video>
+        <video id="recorded" playsinline="" loop=""></video>
+        
+        <div class="main-content" id="panel">
 
-    <div id="container">
-      <video id="gum" playsinline autoplay muted></video>
-      <video id="recorded" playsinline loop></video>
+          Hello {{name}}
+          <br>
+          This is your interview page for {{job_id}} job id
+          <br>
+          Question: {{ques}}
+  
+          <br>
+          Qno = {{q_no}}
+  
+        </div>
+        
+        <div>
+          <button id="start" class="btn btn-primary btn-sm">Start camera</button>
+          <button id="record" class="btn btn-primary btn-sm" disabled>Record</button>
+          <button id="play" class="btn btn-primary btn-sm" disabled>Play</button>
+          <!-- <button id="download" class="btn btn-primary btn-sm" disabled>Submit Video & next question</button> -->
+          <button id="download" class="btn btn-primary btn-sm" disabled>
+            Submit Video </a>
+          </button>
+          <a href=' {{ url_for("student_interview",job_id=job_id ,q_no=q_no) }} ' style="color: white;">
+            <button id="next" class="btn btn-primary btn-sm" disabled>Next Question</button>
+          </a>
 
-      <div>
-        <button id="start" class="btn btn-primary btn-sm">Start camera</button>
-        <button id="record" class="btn btn-primary btn-sm" disabled>Record</button>
-        <button id="play" class="btn btn-primary btn-sm" disabled>Play</button>
-        <!-- <button id="download" class="btn btn-primary btn-sm" disabled>Submit Video & next question</button> -->
-        <button id="download" class="btn btn-primary btn-sm" disabled>
-          Submit Video </a>
-        </button>
-        <a href=' {{ url_for("student_interview",job_id=job_id ,q_no=q_no) }} ' style="color: white;">
-          <button id="next" class="btn btn-primary btn-sm" disabled>Next Question</button>
-        </a>
+        </div>
 
-      </div>
+        <div>
+          <h4>Media Stream Constraints options</h4>
+          <p>
+            Echo cancellation: <input type="checkbox" id="echoCancellation" />
+          </p>
+        </div>
 
-      <div>
-        <h4>Media Stream Constraints options</h4>
-        <p>
-          Echo cancellation: <input type="checkbox" id="echoCancellation" />
-        </p>
-      </div>
-
-      <div>
-        <span id="errorMsg"></span>
+        <div>
+          <span id="errorMsg"></span>
+        </div>
       </div>
     </div>
-  </body>
+  </div>
+</div>
+</div>
+</section>
+</body>
 
-  {% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}{% endblock javascripts %}
 
-  <script>
-      'use strict';
+<script>
+  'use strict';
 
-/* globals MediaRecorder */
+  /* globals MediaRecorder */
 
-let mediaRecorder;
-let recordedBlobs;
+  let mediaRecorder;
+  let recordedBlobs;
 
-const errorMsgElement = document.querySelector('span#errorMsg');
-const recordedVideo = document.querySelector('video#recorded');
-const recordButton = document.querySelector('button#record');
-const playButton = document.querySelector('button#play');
-const downloadButton = document.querySelector('button#download');
-const nextbtn = document.querySelector('button#next');
-
-
-recordButton.addEventListener('click', () => {
-  if (recordButton.textContent === 'Record') {
-    startRecording();
-  } else {
-    stopRecording();
-    recordButton.textContent = 'Record';
-    playButton.disabled = false;
-    downloadButton.disabled = false;
-  }
-});
+  const errorMsgElement = document.querySelector('span#errorMsg');
+  const recordedVideo = document.querySelector('video#recorded');
+  const recordButton = document.querySelector('button#record');
+  const playButton = document.querySelector('button#play');
+  const downloadButton = document.querySelector('button#download');
+  const nextbtn = document.querySelector('button#next');
 
 
-playButton.addEventListener('click', () => {
-  const superBuffer = new Blob(recordedBlobs, {type: 'video/webm'});
-  recordedVideo.src = null;
-  recordedVideo.srcObject = null;
-  recordedVideo.src = window.URL.createObjectURL(superBuffer);
-  recordedVideo.controls = true;
-  recordedVideo.play();
-});
-
-
-downloadButton.addEventListener('click', () => {
-  const blob = new Blob(recordedBlobs, {type: 'video/mp4'});
-  // const url = window.URL.createObjectURL(blob);
-  // const a = document.createElement('a');
-  // a.style.display = 'none';
-  // a.href = url;
-  // a.download = 'test.mp4';
-  // document.body.appendChild(a);
-  // a.click();
-
-  var form = new FormData();
-  var job_id = String('{{job_id}}')
-  var q_no = String('{{q_no}}')
-  var name = String('{{name}}')
-  var extension= new String('.mp4')
-  var filename=job_id+name+q_no+extension
-  form.append('file', blob, filename);
-  form.append('job_id', '{{job_id}}');
-  form.append('q_no', '{{q_no}}');
-  form.append('q_id', '{{q_id}}');
-  // form.append('title', searchedObj.title);
-
-  var oReq = new XMLHttpRequest();
-  oReq.open("POST", "/std/video", true);
-  oReq.onload = function(oEvent) {
-    if (oReq.status == 200) {
-      oOutput.innerHTML = "Uploaded!";
+  recordButton.addEventListener('click', () => {
+    if (recordButton.textContent === 'Record') {
+      startRecording();
     } else {
-      oOutput.innerHTML = "Error " + oReq.status + " occurred when trying to upload your file.<br \/>";
+      stopRecording();
+      recordButton.textContent = 'Record';
+      playButton.disabled = false;
+      downloadButton.disabled = false;
     }
-  };
-
-  oReq.send(form);
-  // alert(oReq.response)
-  nextbtn.disabled = false;
+  });
 
 
-  // document.getElementById("nextbtn").click();
+  playButton.addEventListener('click', () => {
+    const superBuffer = new Blob(recordedBlobs, { type: 'video/webm' });
+    recordedVideo.src = null;
+    recordedVideo.srcObject = null;
+    recordedVideo.src = window.URL.createObjectURL(superBuffer);
+    recordedVideo.controls = true;
+    recordedVideo.play();
+  });
 
-  setTimeout(() => {
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
-  }, 100);
-});
 
-function handleDataAvailable(event) {
-  console.log('handleDataAvailable', event);
-  if (event.data && event.data.size > 0) {
-    recordedBlobs.push(event.data);
-  }
-}
+  downloadButton.addEventListener('click', () => {
+    const blob = new Blob(recordedBlobs, { type: 'video/mp4' });
+    // const url = window.URL.createObjectURL(blob);
+    // const a = document.createElement('a');
+    // a.style.display = 'none';
+    // a.href = url;
+    // a.download = 'test.mp4';
+    // document.body.appendChild(a);
+    // a.click();
 
-function startRecording() {
-  recordedBlobs = [];
-  let options = {mimeType: 'video/webm;codecs=vp9,opus'};
-  try {
-    mediaRecorder = new MediaRecorder(window.stream, options);
-  } catch (e) {
-    console.error('Exception while creating MediaRecorder:', e);
-    errorMsgElement.innerHTML = `Exception while creating MediaRecorder: ${JSON.stringify(e)}`;
-    return;
-  }
+    var form = new FormData();
+    var job_id = String('{{job_id}}')
+    var q_no = String('{{q_no}}')
+    var name = String('{{name}}')
+    var extension = new String('.mp4')
+    var filename = job_id + name + q_no + extension
+    form.append('file', blob, filename);
+    form.append('job_id', '{{job_id}}');
+    form.append('q_no', '{{q_no}}');
+    form.append('q_id', '{{q_id}}');
+    // form.append('title', searchedObj.title);
 
-  console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
-  recordButton.textContent = 'Stop Recording';
-  playButton.disabled = true;
-  downloadButton.disabled = true;
-  mediaRecorder.onstop = (event) => {
-    console.log('Recorder stopped: ', event);
-    console.log('Recorded Blobs: ', recordedBlobs);
-  };
-  mediaRecorder.ondataavailable = handleDataAvailable;
-  mediaRecorder.start();
-  console.log('MediaRecorder started', mediaRecorder);
-}
+    var oReq = new XMLHttpRequest();
+    oReq.open("POST", "/std/video", true);
 
-function stopRecording() {
-    
-  mediaRecorder.stop();
-}
 
-function handleSuccess(stream) {
-  recordButton.disabled = false;
-  console.log('getUserMedia() got stream:', stream);
-  window.stream = stream;
+    oReq.send(form);
+    // alert(oReq.response)
+    // if (oReq.status == 200) {
+    nextbtn.disabled = false;
+    // }
 
-  const gumVideo = document.querySelector('video#gum');
-  gumVideo.srcObject = stream;
-}
 
-async function init(constraints) {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia(constraints);
-    handleSuccess(stream);
-  } catch (e) {
-    console.error('navigator.getUserMedia error:', e);
-    errorMsgElement.innerHTML = `navigator.getUserMedia error:${e.toString()}`;
-  }
-}
+    // document.getElementById("nextbtn").click();
 
-document.querySelector('button#start').addEventListener('click', async () => {
-  // alert("{{name}}");
-  const hasEchoCancellation = document.querySelector('#echoCancellation').checked;
-  const constraints = {
-    audio: {
-      echoCancellation: {exact: hasEchoCancellation}
-    },
-    video: {
-      width: 1280, height: 720
+    setTimeout(() => {
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }, 100);
+  });
+
+  function handleDataAvailable(event) {
+    console.log('handleDataAvailable', event);
+    if (event.data && event.data.size > 0) {
+      recordedBlobs.push(event.data);
     }
-  };
-  console.log('Using media constraints:', constraints);
-  await init(constraints);
-});
-  </script>
-  <!-- <script src="script.js"></script> -->
-  <script src="/static/assets/js/argon.js?v=1.2.0"></script>
+  }
+
+  function startRecording() {
+    recordedBlobs = [];
+    let options = { mimeType: 'video/webm;codecs=vp9,opus' };
+    try {
+      mediaRecorder = new MediaRecorder(window.stream, options);
+    } catch (e) {
+      console.error('Exception while creating MediaRecorder:', e);
+      errorMsgElement.innerHTML = `Exception while creating MediaRecorder: ${JSON.stringify(e)}`;
+      return;
+    }
+
+    console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
+    recordButton.textContent = 'Stop Recording';
+    playButton.disabled = true;
+    downloadButton.disabled = true;
+    mediaRecorder.onstop = (event) => {
+      console.log('Recorder stopped: ', event);
+      console.log('Recorded Blobs: ', recordedBlobs);
+    };
+    mediaRecorder.ondataavailable = handleDataAvailable;
+    mediaRecorder.start();
+    console.log('MediaRecorder started', mediaRecorder);
+  }
+
+  function stopRecording() {
+
+    mediaRecorder.stop();
+  }
+
+  function handleSuccess(stream) {
+    recordButton.disabled = false;
+    console.log('getUserMedia() got stream:', stream);
+    window.stream = stream;
+
+    const gumVideo = document.querySelector('video#gum');
+    gumVideo.srcObject = stream;
+  }
+
+  async function init(constraints) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      handleSuccess(stream);
+    } catch (e) {
+      console.error('navigator.getUserMedia error:', e);
+      errorMsgElement.innerHTML = `navigator.getUserMedia error:${e.toString()}`;
+    }
+  }
+
+  document.querySelector('button#start').addEventListener('click', async () => {
+    // alert("{{name}}");
+    const hasEchoCancellation = document.querySelector('#echoCancellation').checked;
+    const constraints = {
+      audio: {
+        echoCancellation: { exact: hasEchoCancellation }
+      },
+      video: {
+        width: 1280, height: 720
+      }
+    };
+    console.log('Using media constraints:', constraints);
+    await init(constraints);
+  });
+</script>
+<!-- <script src="script.js"></script> -->
+<script src="/static/assets/js/argon.js?v=1.2.0"></script>
 
 </html>

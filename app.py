@@ -180,7 +180,7 @@ def student_page():
     student_id = current_user.id
     # intervw_list = Interviewer.query.all()
     result = db.session.execute(
-        f'select i.name u,i.company_name cn,j.job_profile jp , j.job_id jid ,js.attempted att from interviewer i join jobs j on j.interviewer_id = i.id join job_stu_map js on js.job_id=j.job_id  where js.stu_id={ student_id } ')
+        f'select i.name u,i.company_name cn,j.job_profile jp , j.job_id jid ,js.attempted att from interviewer i join jobs j on j.interviewer_id = i.id join job_stu_map js on js.job_id=j.job_id  where js.stu_id={ student_id }')
     return render_template('student/dashboard.html', name=current_user.name, jobs_list=result)
     # else:
     #     return redirect(url_for("student_login"))
@@ -296,7 +296,7 @@ def job_openings():
     # company name ,job profile ,jd
     result = db.session.execute(f'''select j.job_id jid ,j.job_profile jp,j.job_description_path jd,i.company_name cname 
     from jobs j join interviewer i on j.interviewer_id =i.id
-    where j.collegeName=(select s.collegeName from student s where s.id={stu_id})''')
+    where lower(j.collegeName)=(select lower(s.collegeName) from student s where s.id={stu_id})''')
     # join student s on s.collegeName=j.collegeName
     # where s.id={stu_id}''')
 
@@ -322,6 +322,16 @@ def enroll_job(jid):
     db.session.add(Job_stu_map(job_id=jid, stu_id=stu_id))
     db.session.commit()
     return redirect(url_for('job_openings'))
+@app.route('/job_info_stu', methods=['GET'])
+@login_required
+def show_description_stu():
+    job_id = request.args.get('job_id')
+    query=str(f'''Select * from jobs where job_id={job_id};''')
+    result=db.session.execute(query)
+    for i in result:
+        with open(i.job_description_path,'r') as file:
+            desc=file.read()
+        return render_template('student/includes/description.html', desc=desc,job_profile=i.job_profile)
 
 
 @app.route("/intvw")
@@ -437,6 +447,16 @@ def show_scores():
         out_df = dict(sorted(out_df.items(),key=lambda x:x[1]['Rank'],reverse = False))
         return render_template('interviewer/includes/interview_scores.html', table =out_df)
 
+@app.route('/job_info', methods=['GET'])
+@login_required
+def show_description():
+    job_id = request.args.get('job_id')
+    query=str(f'''Select * from jobs where job_id={job_id};''')
+    result=db.session.execute(query)
+    for i in result:
+        with open(i.job_description_path,'r') as file:
+            desc=file.read()
+        return render_template('interviewer/includes/description.html', desc=desc,job_profile=i.job_profile)
 
 if __name__ == '__main__':
     print("Creating tables")

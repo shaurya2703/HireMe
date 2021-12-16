@@ -1,0 +1,50 @@
+{% extends 'interviewer/layouts/base.html' %}
+
+{% block title %} Dashboard {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<div class="header bg-primary pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+        <div class="col-lg-6 col-7">
+            
+        </div>
+       
+      </div>
+    </div>
+  </div>
+  
+  <div style="justify-content:center;  display:flex">
+    <div class="card" style="width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title">{{job_profile}}</h5>
+        <p class="card-text">{{desc}}</p>
+        <div style="justify-content: center; display: flex;">
+          <a href="/std" class="btn btn-primary">Home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+</div>
+            
+
+      {% include "interviewer/includes/footer.html" %}
+
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+  <script src="/static/assets/vendor/chart.js/dist/Chart.min.js"></script>
+  <script src="/static/assets/vendor/chart.js/dist/Chart.extension.js"></script>
+
+{% endblock javascripts %}
