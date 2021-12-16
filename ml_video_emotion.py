@@ -36,8 +36,8 @@ import moviepy.editor as mp
 def videoToText(path):
 
 
-    command2mp3 = f"ffmpeg -i {path} audio.mp3"
-    command2wav = "ffmpeg -i audio.mp3 audio.wav"
+    command2mp3 = f"ffmpeg -i  {path} audio.mp3 -y"
+    command2wav = "ffmpeg -i  audio.mp3 audio.wav -y"
     
 
     os.system(command2mp3)
@@ -48,8 +48,8 @@ def videoToText(path):
     with audio as source:
         audio_file = r.record(source)
     result = r.recognize_google(audio_file)
-    os.remove('audio.mp3')
-    os.remove('audio.wav')
+    os.system('rm audio.mp3')
+    os.system('rm audio.wav')
     return result
 
 

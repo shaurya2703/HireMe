@@ -1,0 +1,46 @@
+{% extends 'interviewer/layouts/base.html' %}
+
+{% block title %} Dashboard {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<div class="header bg-primary pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+        <div class="col-lg-6 col-7">
+          
+        </div>
+       
+      </div>
+    </div>
+  </div>
+</div>
+
+   
+  <div class="table-responsive">
+    <!-- Projects table -->
+    <p class="description">{{job_profile}}
+    </p> 
+    <p class="description" >
+        {{desc}}
+    </p>
+  </div>
+
+            
+
+      {% include "interviewer/includes/footer.html" %}
+
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+  <script src="/static/assets/vendor/chart.js/dist/Chart.min.js"></script>
+  <script src="/static/assets/vendor/chart.js/dist/Chart.extension.js"></script>
+
+{% endblock javascripts %}
