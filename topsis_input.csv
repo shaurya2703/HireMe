@@ -1,2 +1,2 @@
 name,avg(sa.anger_score),avg(sa.disgust_score),avg(sa.fear_score) ,avg(sa.happy_score),avg(sa.sad_score),avg(sa.surprise_score),avg(sa.neutral_score),avg(sa.similarity_score)
-Satvik Mehra,1e-10,1e-10,1e-10,0.29411764705882354,0.23529411764705882,0.11764705882352941,0.35294117647058826,0.52,
+Shaurya Khanna,1e-10,1e-10,1e-10,1e-10,1e-10,1e-10,1.0,0.33,

@@ -18,5 +18,7 @@
 -- insert into jobs(job_profile,job_description_path,collegeName,interviewer_id) 
 --             values('sample1','documents/jobdesc/9de5bea40088168742e2a1250759a494b420d56a.txt','tiet',1)
 
-select s.name,avg(sa.anger_score),avg(sa.disgust_score),avg(sa.fear_score) ,avg(sa.happy_score),avg(sa.sad_score),avg(sa.surprise_score),avg(sa.neutral_score),avg(sa.similarity_score) 
-        from student_answers sa join questions q on q.question_id=sa.question_id  join student s on s.id=sa.stu_id where q.job_id= 1 group by stu_id
+-- select s.name,avg(sa.anger_score),avg(sa.disgust_score),avg(sa.fear_score) ,avg(sa.happy_score),avg(sa.sad_score),avg(sa.surprise_score),avg(sa.neutral_score),avg(sa.similarity_score) 
+--         from student_answers sa join questions q on q.question_id=sa.question_id  join student s on s.id=sa.stu_id where q.job_id= 1 group by stu_id
+
+-- DELETE from jobs WHERE job_id = 5;
