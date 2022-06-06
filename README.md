@@ -3,12 +3,12 @@
 ## _AI Powered Hiring Assistant_
 
 ## Screenshots
-[recruiter_dashboard](screenshots/recruiter_dashboard.jpg)
-[add_job](screenshots/add_job.jpg)
-[add_questions](screenshots/add_question.jpg)
-[stu_dashboard](screenshots/stu_dashboard.jpg)
-[test_screen](screenshots/test_screen.jpg)
-[results](screenshots/results.jpg)
+![recruiter_dashboard](screenshots/recruiter_dashboard.jpg)
+![add_job](screenshots/add_job.jpg)
+![add_questions](screenshots/add_question.jpg)
+![stu_dashboard](screenshots/stu_dashboard.jpg)
+![test_screen](screenshots/test_screen.jpg)
+![results](screenshots/results.jpg)
 
 
 
